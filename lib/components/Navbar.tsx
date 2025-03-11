@@ -1,4 +1,3 @@
-import React from "react";
 import { usePrivy } from "@privy-io/react-auth";
 
 export default function Navbar() {
