@@ -16,7 +16,7 @@ This is a working code example for implementing email login & sponsored transact
 - ID number: 1315
 - RPC URL: https://aeneid.storyrpc.io
 
-For the Bundler URL and Paymaster URL, go to https://dashboard.pimlico.io and create a new app. Then click on "API Keys", create a new API Key, and click "RPC URLs" as shown below:
+For the Bundler URL and Paymaster URL, go to https://dashboard.pimlico.io and create a new app. Then click on "API Keys", create a new API Key, click "RPC URLs" as shown below, and then select "Story Aeneid Testnet" as the network:
 
   <img width="1512" alt="Screenshot 2025-03-10 at 11 29 14 PM" src="https://github.com/user-attachments/assets/0e6d9e9c-dc60-44bf-9afe-b17c52ba07f2" />
 
