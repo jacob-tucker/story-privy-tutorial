@@ -4,7 +4,7 @@ This is a working code example for implementing email login & sponsored transact
 
 1. Clone the project locally
 
-2. `cp .env.example` and fill in your `NEXT_PUBLIC_PRIVY_APP_ID` by creating an app at https://dashboard.privy.io
+2. `cp .env.example .env` and fill in your `NEXT_PUBLIC_PRIVY_APP_ID` in the `.env` file by creating an app at https://dashboard.privy.io
 
 3. Make sure to enable Smart Wallets on your Privy dashboard
 
