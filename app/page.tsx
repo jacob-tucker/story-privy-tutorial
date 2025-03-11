@@ -14,6 +14,7 @@ import Navbar from "@/lib/components/Navbar";
 import Footer from "@/lib/components/Footer";
 
 const NFT_CONTRACT_ADDRESS = "0x937bef10ba6fb941ed84b8d249abc76031429a9a";
+const SPG_NFT_CONTRACT_ADDRESS = "0xc32A8a0FF3beDDDa58393d022aF433e78739FAbc";
 
 export default function Home() {
   const { login, user } = usePrivy();
@@ -110,10 +111,8 @@ export default function Home() {
     try {
       const storyClient = await setupStoryClient();
 
-      // Using a fixed token ID for simplicity
-      const response = await storyClient.ipAsset.register({
-        tokenId: "945",
-        nftContract: NFT_CONTRACT_ADDRESS,
+      const response = await storyClient.ipAsset.mintAndRegisterIp({
+        spgNftContract: SPG_NFT_CONTRACT_ADDRESS,
         txOptions: { encodedTxDataOnly: true },
       });
 
