@@ -113,6 +113,16 @@ export default function Home() {
 
       const response = await storyClient.ipAsset.mintAndRegisterIp({
         spgNftContract: SPG_NFT_CONTRACT_ADDRESS,
+        ipMetadata: {
+          ipMetadataURI:
+            "https://ipfs.io/ipfs/QmReVXv6nAFqw3o2gkWk6Ag51MyfFJV3XxAF9puyga2j8s",
+          ipMetadataHash:
+            "0x018a895030842946f4bd1911f1658dc6c811f53fae70c1609cc1727047315fa4",
+          nftMetadataURI:
+            "https://ipfs.io/ipfs/QmWQmJYqshh3SVQ6Yv8PnN4paN6QEDq2tmW17PQ6NybnZR",
+          nftMetadataHash:
+            "0x41a4d1aded5525a12fd2c1ee353712e9e980535651eb20c6b6ff151c5eecd590",
+        },
         txOptions: { encodedTxDataOnly: true },
       });
 
