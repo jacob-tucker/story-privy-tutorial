@@ -275,7 +275,7 @@ export default function Home() {
               </div>
               <h1 className="text-5xl font-bold">Story &lt;&gt; Privy Demo</h1>
               <p className="text-xl text-gray-500 max-w-md">
-                Connect your wallet to start interacting with Story Protocol
+                Connect your wallet to start interacting with Story
               </p>
               <button
                 onClick={login}
