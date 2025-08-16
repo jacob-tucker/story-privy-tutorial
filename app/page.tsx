@@ -1,17 +1,14 @@
 "use client";
 import { usePrivy } from "@privy-io/react-auth";
 import { useSmartWallets } from "@privy-io/react-auth/smart-wallets";
-import { encodeFunctionData, http } from "viem";
+import { encodeFunctionData } from "viem";
 import { defaultNftContractAbi } from "@/lib/constants/defaultNftContractAbi";
-import {
-  EncodedTxData,
-  StoryClient,
-  StoryConfig,
-} from "@story-protocol/core-sdk";
 import { useState } from "react";
 import ActionCard from "@/lib/components/ActionCard";
 import Navbar from "@/lib/components/Navbar";
 import Footer from "@/lib/components/Footer";
+import { registrationWorkflowsAbi } from "@/lib/constants/registrationWorkflowsAbi";
+import { storyAeneid } from "viem/chains";
 
 const NFT_CONTRACT_ADDRESS = "0x937bef10ba6fb941ed84b8d249abc76031429a9a";
 const SPG_NFT_CONTRACT_ADDRESS = "0xc32A8a0FF3beDDDa58393d022aF433e78739FAbc";
@@ -21,16 +18,6 @@ export default function Home() {
   const { client: smartWalletClient } = useSmartWallets();
   const [transactionStatus, setTransactionStatus] =
     useState<React.ReactNode>("");
-
-  async function setupStoryClient() {
-    const config: StoryConfig = {
-      account: smartWalletClient!.account,
-      transport: http("https://aeneid.storyrpc.io"),
-      chainId: "aeneid",
-    };
-    const client = StoryClient.newClient(config);
-    return client;
-  }
 
   async function signMessage() {
     setTransactionStatus("Signing message...");
@@ -70,6 +57,7 @@ export default function Home() {
 
       const transactionRequest = {
         to: NFT_CONTRACT_ADDRESS,
+        value: 0n,
         data: encodeFunctionData({
           abi: defaultNftContractAbi,
           functionName: "mintNFT",
@@ -78,10 +66,11 @@ export default function Home() {
       } as const;
 
       const txHash = await smartWalletClient?.sendTransaction(
-        transactionRequest,
         {
-          uiOptions,
-        }
+          ...transactionRequest,
+          chain: storyAeneid,
+        },
+        { uiOptions }
       );
       console.log("Transaction Hash:", txHash);
 
@@ -109,22 +98,33 @@ export default function Home() {
   async function registerIp() {
     setTransactionStatus("Registering IP...");
     try {
-      const storyClient = await setupStoryClient();
-
-      const response = await storyClient.ipAsset.mintAndRegisterIp({
-        spgNftContract: SPG_NFT_CONTRACT_ADDRESS,
-        ipMetadata: {
-          ipMetadataURI:
-            "https://ipfs.io/ipfs/QmReVXv6nAFqw3o2gkWk6Ag51MyfFJV3XxAF9puyga2j8s",
-          ipMetadataHash:
-            "0x018a895030842946f4bd1911f1658dc6c811f53fae70c1609cc1727047315fa4",
-          nftMetadataURI:
-            "https://ipfs.io/ipfs/QmWQmJYqshh3SVQ6Yv8PnN4paN6QEDq2tmW17PQ6NybnZR",
-          nftMetadataHash:
-            "0x41a4d1aded5525a12fd2c1ee353712e9e980535651eb20c6b6ff151c5eecd590",
-        },
-        txOptions: { encodedTxDataOnly: true },
-      });
+      // Contract Code: https://github.com/storyprotocol/protocol-periphery-v1/blob/main/contracts/workflows/RegistrationWorkflows.sol#L118
+      // Deployed Contract Addresses: https://docs.story.foundation/developers/deployed-smart-contracts
+      // Since this is on testnet, follow the "Aeneid" column
+      const transactionRequest = {
+        to: "0xbe39E1C756e921BD25DF86e7AAa31106d1eb0424" as `0x${string}`,
+        value: 0n,
+        data: encodeFunctionData({
+          abi: registrationWorkflowsAbi, // the abi you copied above
+          functionName: "mintAndRegisterIp",
+          args: [
+            SPG_NFT_CONTRACT_ADDRESS, // example spg nft contract I use on Aeneid
+            smartWalletClient?.account.address,
+            // example metadata values
+            {
+              ipMetadataURI:
+                "https://ipfs.io/ipfs/QmReVXv6nAFqw3o2gkWk6Ag51MyfFJV3XxAF9puyga2j8s",
+              ipMetadataHash:
+                "0x018a895030842946f4bd1911f1658dc6c811f53fae70c1609cc1727047315fa4",
+              nftMetadataURI:
+                "https://ipfs.io/ipfs/QmWQmJYqshh3SVQ6Yv8PnN4paN6QEDq2tmW17PQ6NybnZR",
+              nftMetadataHash:
+                "0x41a4d1aded5525a12fd2c1ee353712e9e980535651eb20c6b6ff151c5eecd590",
+            },
+            true,
+          ],
+        }),
+      };
 
       const uiOptions = {
         title: "Register IP",
@@ -133,10 +133,11 @@ export default function Home() {
       };
 
       const txHash = await smartWalletClient?.sendTransaction(
-        response.encodedTxData as EncodedTxData,
         {
-          uiOptions,
-        }
+          ...transactionRequest,
+          chain: storyAeneid,
+        },
+        { uiOptions }
       );
       console.log("Transaction Hash:", txHash);
 

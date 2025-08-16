@@ -2,7 +2,8 @@
 
 import { PrivyProvider } from "@privy-io/react-auth";
 import { SmartWalletsProvider } from "@privy-io/react-auth/smart-wallets";
-import { aeneid } from "@story-protocol/core-sdk";
+// import { aeneid } from "@story-protocol/core-sdk";
+import { storyAeneid } from "viem/chains";
 
 export default function Providers({ children }: { children: React.ReactNode }) {
   return (
@@ -19,11 +20,19 @@ export default function Providers({ children }: { children: React.ReactNode }) {
         embeddedWallets: {
           createOnLogin: "all-users",
         },
-        defaultChain: aeneid,
-        supportedChains: [aeneid],
+        defaultChain: storyAeneid,
+        supportedChains: [storyAeneid],
       }}
     >
-      <SmartWalletsProvider>{children}</SmartWalletsProvider>
+      <SmartWalletsProvider
+        config={{
+          paymasterContext: {
+            expiryDuration: 60,
+          },
+        }}
+      >
+        {children}
+      </SmartWalletsProvider>
     </PrivyProvider>
   );
 }
